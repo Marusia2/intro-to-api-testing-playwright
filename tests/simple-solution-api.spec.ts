@@ -152,23 +152,6 @@ test('delete order for unauthorized user should receive code 401', async ({ requ
   console.log('response status:', response.status())
   expect(response.status()).toBe(StatusCodes.UNAUTHORIZED)
 })
-// Delete negative too many requests
-// test('delete order request executed too many times should receive code 429', async ({ request }) => {
-//
-//   const requestHeaders = { 'api_key': '1234567890123456'};
-// Send DELETE request to the server multiple times (not working)
-//   for (let i= 0; i < 10; i++) {
-//     await request.delete('https://backend.tallinn-learning.ee/test-orders/1', {
-//       headers: requestHeaders,
-//     });
-//   }
-//
-//   const response = await request.delete('https://backend.tallinn-learning.ee/test-orders/1', {
-//     headers: requestHeaders,
-//   });
-//   console.log('response status:', response.status())
-//   expect(response.status()).toBe(StatusCodes.TOO_MANY_REQUESTS)
-// });
 
 // DELETE request. Delete order by providing an invalid order ID should receive code 400
 test('delete order with invalid order ID should receive code 400', async ({ request }) => {
@@ -201,18 +184,3 @@ test('Get order with missing data should receive code 500', async ({ request }) 
   console.log('response body:', await response.json())
   expect(response.status()).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
 })
-
-// // Negative scenario with missing data  -> NOT working
-// test('Get order with missing data should receive code 429', async ({ request }) => {
-//
-//   for (let i = 0; i < 10; i++) {
-//     await request.get('https://backend.tallinn-learning.ee/test-orders', {});
-//   }
-//   const response = await request.get('https://backend.tallinn-learning.ee/test-orders?username=Peter&password=test', {
-//
-//   });
-//   // Log the response status and body
-//   console.log('response status:', response.status())
-//   console.log('response body:', await response.json())
-//   expect(response.status()).toBe(StatusCodes.TOO_MANY_REQUESTS)
-// });
