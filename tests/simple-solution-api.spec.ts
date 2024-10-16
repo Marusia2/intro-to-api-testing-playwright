@@ -117,7 +117,7 @@ test('put order with incorrect ID data but unauthorized user should receive code
     customerName: 'Peter',
     customerPhone: '+371112222',
     comment: 'test',
-    id: 11111111111111111111111,
+    id: 'incorrect_ID',
   }
   const requestHeaders = { api_key: '1234567890123456' }
   const response = await request.put('https://backend.tallinn-learning.ee/test-orders/1', {
