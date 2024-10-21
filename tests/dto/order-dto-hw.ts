@@ -29,7 +29,7 @@ export class OrderDtoHw {
       //Math.floor(Math.random() * 30) + 17,
       Math.floor(Math.random() * 20) + 20,
       true,
-      Math.floor(Math.random() * 100) +100,
+      Math.floor(Math.random() * 100) + 100,
       //[12, 18, 24, 30, 36][Math.floor(Math.random() * 5)],
       [12][Math.floor(Math.random())],
     )
@@ -44,7 +44,6 @@ export class OrderDtoHw {
       Math.floor(Math.random() * 1000),
       //[6, 9, 12][Math.floor(Math.random() * 3)],
       [9][Math.floor(Math.random())],
-
     )
   }
   // method to return High risk with random data

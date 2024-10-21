@@ -1,5 +1,5 @@
 | Number | Checklist                                                                                                             | Status |
-|:------:|-----------------------------------------------------------------------------------------------------------------------|--------|
+| :----: | --------------------------------------------------------------------------------------------------------------------- | ------ |
 |   1    | GET request. Retrieve order data with the provided valid ID should receive code 200                                   | PASS   |
 |   2    | GET request. The order with the provided incorrect ID should receive code 400                                         | PASS   |
 |   3    | POST request. Create an order with provided correct data should receive code 200                                      | PASS   |
@@ -17,4 +17,3 @@
 |   15   | POST request. A negative scenario where incomes that do not meet the requirements are below 1, should return 400      | PASS   |
 |   16   | POST request. A negative scenario where a large loan with a huge debt, is not comparable to income, should return 400 | PASS   |
 |   17   | POST request. A negative scenario where debt with negative value, should return code 400                              | PASS   |
-
