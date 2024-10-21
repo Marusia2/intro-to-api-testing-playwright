@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test'
 
 import { StatusCodes } from 'http-status-codes'
+import { OrderDto } from './dto/order-dto'
+import { OrderDtoHw } from './dto/order-dto-hw'
 
 test('get order with correct id should receive code 200', async ({ request }) => {
   // Build and send a GET request to the server
@@ -22,38 +24,35 @@ test('get order with incorrect id should receive code 400', async ({ request }) 
 })
 
 test('post order with correct data should receive code 200', async ({ request }) => {
+  const orderDto = OrderDto.createOrderWithCorrectRandomData()
+  orderDto.customerName = 'Sam' //fields are not private, so you may modify them
   // prepare request body
-  const requestBody = {
-    status: 'OPEN',
-    courierId: 0,
-    customerName: 'string',
-    customerPhone: 'string',
-    comment: 'string',
-    id: 0,
-  }
+  //const orderDto = new OrderDto("OPEN", 0, "Matt", "+377777777", "testing", 0)
+  //const orderDto = OrderDto.createOrderWithCorrectRandomData() // no "new" because it's static method, and it's called from class name !!!!
+
   // Send a POST request to the server
   const response = await request.post('https://backend.tallinn-learning.ee/test-orders', {
-    data: requestBody,
+    //data: OrderDto.createOrderWithCorrectRandomData() //called from class not from object. No "New" as it is private
+    data: orderDto,
   })
   // Log the response status and body
   console.log('response status:', response.status())
   console.log('response body:', await response.json())
-  expect(response.status()).toBe(StatusCodes.OK)
+  expect.soft(response.status()).toBe(StatusCodes.OK)
+
+  const responseBody = await response.json()
+  expect.soft(response.status()).toBe(StatusCodes.OK)
+  expect.soft(responseBody.status).toBe('OPEN')
+  expect.soft(responseBody.customerName).toBe('Sam')
 })
 
 test('post order with incorrect data should receive code 400', async ({ request }) => {
   // prepare request body
-  const requestBody = {
-    status: 'CLOSED',
-    courierId: 0,
-    customerName: 'string',
-    customerPhone: 'string',
-    comment: 'string',
-    id: 0,
-  }
+  //const orderDto = new OrderDto("CLOSED", 0, "Matt", "+377777777", "testing", 0)
+
   // Send a POST request to the server
   const response = await request.post('https://backend.tallinn-learning.ee/test-orders', {
-    data: requestBody,
+    data: OrderDto.createOrderWithIncorrectRandomData(),
   })
   // Log the response status and body
   console.log('response status:', response.status())
@@ -183,4 +182,121 @@ test('Get order with missing data should receive code 500', async ({ request }) 
   console.log('response status:', response.status())
   console.log('response body:', await response.json())
   expect(response.status()).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+})
+
+// 10 Homework
+//10.1  Scenario to check Low Risk score
+test('post request calculate Low risk score with valid data returns code 200', async ({
+  request,
+}) => {
+  const orderDtoHw = OrderDtoHw.calculateLowRiskScoreBasedOnIncomeWithValidData()
+
+  const response = await request.post(
+    'https://backend.tallinn-learning.ee/api/loan-calc/decision',
+    {
+      data: orderDtoHw,
+    },
+  )
+  console.log('response status:', response.status())
+  console.log('response body:', await response.json())
+  expect.soft(response.status()).toBe(StatusCodes.OK)
+
+  const responseBody = await response.json()
+  expect.soft(response.status()).toBe(StatusCodes.OK)
+  expect.soft(responseBody.riskLevel).toBe('Low Risk')
+  expect.soft(responseBody.riskPeriods).toBeDefined()
+  expect.soft(responseBody.applicationId).toBeTruthy()
+  expect.soft(responseBody.riskDecision).toBe('positive')
+})
+// 10.2 Scenario to check Medium Risk score
+test('post request calculate Medium risk score with valid data returns code 200', async ({
+  request,
+}) => {
+  const orderDtoHw = OrderDtoHw.calculateMediumRiskScoreBasedOnIncomeWithValidData()
+
+  const response = await request.post(
+    'https://backend.tallinn-learning.ee/api/loan-calc/decision',
+    {
+      data: orderDtoHw,
+    },
+  )
+  console.log('response status:', response.status())
+  console.log('response body:', await response.json())
+  expect.soft(response.status()).toBe(StatusCodes.OK)
+
+  const responseBody = await response.json()
+  expect.soft(response.status()).toBe(StatusCodes.OK)
+  expect.soft(responseBody.riskLevel).toBe('Medium Risk')
+  expect.soft(responseBody.riskPeriods).toBeDefined()
+  expect.soft(responseBody.applicationId).toBeTruthy()
+  expect.soft(responseBody.riskDecision).toBe('positive')
+})
+
+//10.3 Scenario to check High Risk score
+test('post request calculate High risk score with valid data returns code 200', async ({
+  request,
+}) => {
+  const orderDtoHw = OrderDtoHw.calculateHighRiskScoreBasedOnIncomeWithValidData()
+
+  const response = await request.post(
+    'https://backend.tallinn-learning.ee/api/loan-calc/decision',
+    {
+      data: orderDtoHw,
+    },
+  )
+  console.log('response status:', response.status())
+  console.log('response body:', await response.json())
+  expect.soft(response.status()).toBe(StatusCodes.OK)
+
+  const responseBody = await response.json()
+  expect.soft(response.status()).toBe(StatusCodes.OK)
+  expect.soft(responseBody.riskLevel).toBe('High Risk')
+  expect.soft(responseBody.riskPeriods).toBeDefined()
+  expect.soft(responseBody.applicationId).toBeTruthy()
+  expect.soft(responseBody.riskDecision).toBe('positive')
+})
+
+// 10.4 A negative scenario where incomes that do not meet the requirements are below 1.
+test('post request with invalid income data returns code 400', async ({ request, }) => {
+  const orderDtoHw = OrderDtoHw.calculateRiskScoreBasedOnIncomeWithInvalidData()
+
+  const response = await request.post(
+    'https://backend.tallinn-learning.ee/api/loan-calc/decision',
+    {
+      data: orderDtoHw,
+    },
+  )
+  console.log('response status:', response.status())
+  expect.soft(response.status()).toBe(StatusCodes.BAD_REQUEST)
+})
+// 10.5 A negative scenario where a large loan with a huge debt, is not comparable to income
+test('post request with invalid age returns code 400', async ({ request, }) => {
+  const orderDtoHw = OrderDtoHw.calculateRiskScoreWithDebt()
+
+  const response = await request.post(
+    'https://backend.tallinn-learning.ee/api/loan-calc/decision',
+    {
+      data: orderDtoHw,
+    },)
+      console.log('response status:', response.status())
+      console.log('response body:', await response.json())
+      expect.soft(response.status()).toBe(StatusCodes.OK)
+
+      const responseBody = await response.json()
+      expect.soft(response.status()).toBe(StatusCodes.OK)
+      expect.soft(responseBody.riskLevel).toBe('Very High Risk')
+      expect.soft(responseBody.riskDecision).toBe('negative')
+    })
+// 10.6 A negative scenario where Debt with a negative value
+test('post request with invalid debt returns code 400', async ({ request, }) => {
+  const orderDtoHw = OrderDtoHw.calculateRiskScoreWithDebtInvalidValue()
+
+  const response = await request.post(
+    'https://backend.tallinn-learning.ee/api/loan-calc/decision',
+    {
+      data: orderDtoHw,
+    },)
+  console.log('response status:', response.status())
+  expect.soft(response.status()).toBe(StatusCodes.BAD_REQUEST)
+
 })
