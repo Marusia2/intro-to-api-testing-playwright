@@ -213,7 +213,8 @@ test('post request calculate Low risk score with valid data returns code 200', a
 test('post request calculate Medium risk score with valid data returns code 200', async ({
   request,
 }) => {
-  const orderDtoHw = LoanApplication.generateApplicationWithMediumRiskScoreBasedOnIncomeWithValidData()
+  const orderDtoHw =
+    LoanApplication.generateApplicationWithMediumRiskScoreBasedOnIncomeWithValidData()
 
   const response = await request.post(
     'https://backend.tallinn-learning.ee/api/loan-calc/decision',
@@ -238,7 +239,8 @@ test('post request calculate Medium risk score with valid data returns code 200'
 test('post request calculate High risk score with valid data returns code 200', async ({
   request,
 }) => {
-  const orderDtoHw = LoanApplication.generateApplicationWithHighRiskScoreBasedOnIncomeWithValidData()
+  const orderDtoHw =
+    LoanApplication.generateApplicationWithHighRiskScoreBasedOnIncomeWithValidData()
 
   const response = await request.post(
     'https://backend.tallinn-learning.ee/api/loan-calc/decision',
