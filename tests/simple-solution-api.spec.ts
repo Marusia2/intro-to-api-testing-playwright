@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 import { StatusCodes } from 'http-status-codes'
 import { OrderDto } from './dto/order-dto'
-import { OrderDtoHw } from './dto/order-dto-hw'
+import { LoanApplication } from './dto/loan-application'
 
 test('get order with correct id should receive code 200', async ({ request }) => {
   // Build and send a GET request to the server
@@ -189,7 +189,7 @@ test('Get order with missing data should receive code 500', async ({ request }) 
 test('post request calculate Low risk score with valid data returns code 200', async ({
   request,
 }) => {
-  const orderDtoHw = OrderDtoHw.calculateLowRiskScoreBasedOnIncomeWithValidData()
+  const orderDtoHw = LoanApplication.generateApplicationWithLowRiskScoreBasedOnIncomeWithValidData()
 
   const response = await request.post(
     'https://backend.tallinn-learning.ee/api/loan-calc/decision',
@@ -203,6 +203,7 @@ test('post request calculate Low risk score with valid data returns code 200', a
 
   const responseBody = await response.json()
   expect.soft(response.status()).toBe(StatusCodes.OK)
+  expect.soft(responseBody.riskScore).toBeDefined()
   expect.soft(responseBody.riskLevel).toBe('Low Risk')
   expect.soft(responseBody.riskPeriods).toBeDefined()
   expect.soft(responseBody.applicationId).toBeTruthy()
@@ -212,7 +213,7 @@ test('post request calculate Low risk score with valid data returns code 200', a
 test('post request calculate Medium risk score with valid data returns code 200', async ({
   request,
 }) => {
-  const orderDtoHw = OrderDtoHw.calculateMediumRiskScoreBasedOnIncomeWithValidData()
+  const orderDtoHw = LoanApplication.generateApplicationWithMediumRiskScoreBasedOnIncomeWithValidData()
 
   const response = await request.post(
     'https://backend.tallinn-learning.ee/api/loan-calc/decision',
@@ -226,6 +227,7 @@ test('post request calculate Medium risk score with valid data returns code 200'
 
   const responseBody = await response.json()
   expect.soft(response.status()).toBe(StatusCodes.OK)
+  expect.soft(responseBody.riskScore).toBeDefined()
   expect.soft(responseBody.riskLevel).toBe('Medium Risk')
   expect.soft(responseBody.riskPeriods).toBeDefined()
   expect.soft(responseBody.applicationId).toBeTruthy()
@@ -236,7 +238,7 @@ test('post request calculate Medium risk score with valid data returns code 200'
 test('post request calculate High risk score with valid data returns code 200', async ({
   request,
 }) => {
-  const orderDtoHw = OrderDtoHw.calculateHighRiskScoreBasedOnIncomeWithValidData()
+  const orderDtoHw = LoanApplication.generateApplicationWithHighRiskScoreBasedOnIncomeWithValidData()
 
   const response = await request.post(
     'https://backend.tallinn-learning.ee/api/loan-calc/decision',
@@ -250,6 +252,7 @@ test('post request calculate High risk score with valid data returns code 200', 
 
   const responseBody = await response.json()
   expect.soft(response.status()).toBe(StatusCodes.OK)
+  expect.soft(responseBody.riskScore).toBeDefined()
   expect.soft(responseBody.riskLevel).toBe('High Risk')
   expect.soft(responseBody.riskPeriods).toBeDefined()
   expect.soft(responseBody.applicationId).toBeTruthy()
@@ -258,7 +261,7 @@ test('post request calculate High risk score with valid data returns code 200', 
 
 // 10.4 A negative scenario where incomes that do not meet the requirements are below 1.
 test('post request with invalid income data returns code 400', async ({ request }) => {
-  const orderDtoHw = OrderDtoHw.calculateRiskScoreBasedOnIncomeWithInvalidData()
+  const orderDtoHw = LoanApplication.generateApplicationWithInvalidIncomeData()
 
   const response = await request.post(
     'https://backend.tallinn-learning.ee/api/loan-calc/decision',
@@ -271,7 +274,7 @@ test('post request with invalid income data returns code 400', async ({ request 
 })
 // 10.5 A negative scenario where a large loan with a huge debt, is not comparable to income
 test('post request with invalid age returns code 400', async ({ request }) => {
-  const orderDtoHw = OrderDtoHw.calculateRiskScoreWithDebt()
+  const orderDtoHw = LoanApplication.generateApplicationWithLoanDebtIncomparableToIncome()
 
   const response = await request.post(
     'https://backend.tallinn-learning.ee/api/loan-calc/decision',
@@ -290,7 +293,7 @@ test('post request with invalid age returns code 400', async ({ request }) => {
 })
 // 10.6 A negative scenario where Debt with a negative value
 test('post request with invalid debt returns code 400', async ({ request }) => {
-  const orderDtoHw = OrderDtoHw.calculateRiskScoreWithDebtInvalidValue()
+  const orderDtoHw = LoanApplication.generateApplicationWithNegativeDebtValue()
 
   const response = await request.post(
     'https://backend.tallinn-learning.ee/api/loan-calc/decision',

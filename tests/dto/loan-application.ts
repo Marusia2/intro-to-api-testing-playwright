@@ -1,4 +1,4 @@
-export class OrderDtoHw {
+export class LoanApplication {
   income: number
   debt: number
   age: number
@@ -22,8 +22,8 @@ export class OrderDtoHw {
     this.loanPeriod = loanPeriod
   }
   // method to return Low risk with random data
-  static calculateLowRiskScoreBasedOnIncomeWithValidData(): OrderDtoHw {
-    return new OrderDtoHw(
+  static generateApplicationWithLowRiskScoreBasedOnIncomeWithValidData(): LoanApplication {
+    return new LoanApplication(
       Math.floor(Math.random() * 1000) + 4000,
       0,
       //Math.floor(Math.random() * 30) + 17,
@@ -35,8 +35,8 @@ export class OrderDtoHw {
     )
   }
   // method to return Medium risk with random data
-  static calculateMediumRiskScoreBasedOnIncomeWithValidData(): OrderDtoHw {
-    return new OrderDtoHw(
+  static generateApplicationWithMediumRiskScoreBasedOnIncomeWithValidData(): LoanApplication {
+    return new LoanApplication(
       Math.floor(Math.random() * 1001) + 1000,
       Math.floor(Math.random() * 10),
       Math.floor(Math.random() * 50) + 17,
@@ -47,8 +47,8 @@ export class OrderDtoHw {
     )
   }
   // method to return High risk with random data
-  static calculateHighRiskScoreBasedOnIncomeWithValidData(): OrderDtoHw {
-    return new OrderDtoHw(
+  static generateApplicationWithHighRiskScoreBasedOnIncomeWithValidData(): LoanApplication {
+    return new LoanApplication(
       //Math.floor(Math.random() * 10000),
       Math.floor(Math.random() * 1000) + 1,
       Math.floor(Math.random() * 100) + 100,
@@ -60,8 +60,8 @@ export class OrderDtoHw {
     )
   }
   // A negative scenario where incomes that do not meet the requirements are below 1.
-  static calculateRiskScoreBasedOnIncomeWithInvalidData(): OrderDtoHw {
-    return new OrderDtoHw(
+  static generateApplicationWithInvalidIncomeData(): LoanApplication {
+    return new LoanApplication(
       //Math.floor(Math.random() * 1000) + 20000,
       0,
       0,
@@ -72,8 +72,8 @@ export class OrderDtoHw {
     )
   }
   // A negative scenario where a large loan with a huge debt, is not comparable to income
-  static calculateRiskScoreWithDebt(): OrderDtoHw {
-    return new OrderDtoHw(
+  static generateApplicationWithLoanDebtIncomparableToIncome(): LoanApplication {
+    return new LoanApplication(
       Math.floor(Math.random() * 1000),
       10000,
       Math.floor(Math.random() * 50) + 17,
@@ -83,8 +83,8 @@ export class OrderDtoHw {
     )
   }
   // A negative scenario where Debt with a negative value
-  static calculateRiskScoreWithDebtInvalidValue(): OrderDtoHw {
-    return new OrderDtoHw(
+  static generateApplicationWithNegativeDebtValue(): LoanApplication {
+    return new LoanApplication(
       Math.floor(Math.random() * 1000),
       -1 * Math.floor(Math.random() * 10),
       Math.floor(Math.random() * 50) + 17,
