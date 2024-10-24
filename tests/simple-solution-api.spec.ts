@@ -189,12 +189,13 @@ test('Get order with missing data should receive code 500', async ({ request }) 
 test('post request calculate Low risk score with valid data returns code 200', async ({
   request,
 }) => {
-  const orderDtoHw = LoanApplication.generateApplicationWithLowRiskScoreBasedOnIncomeWithValidData()
+  const loanApplication =
+    LoanApplication.generateApplicationWithLowRiskScoreBasedOnIncomeWithValidData()
 
   const response = await request.post(
     'https://backend.tallinn-learning.ee/api/loan-calc/decision',
     {
-      data: orderDtoHw,
+      data: loanApplication,
     },
   )
   console.log('response status:', response.status())

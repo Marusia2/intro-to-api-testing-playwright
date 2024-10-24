@@ -54,7 +54,7 @@ export class LoanApplication {
       Math.floor(Math.random() * 100) + 100,
       Math.floor(Math.random() * 50) + 17,
       false,
-      Math.floor(Math.random() * 1000) + 1000,
+      Math.floor(Math.random() * 1000) + 100,
       //[3, 6][Math.floor(Math.random() * 2)],
       [3][Math.floor(Math.random())],
     )
